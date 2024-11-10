@@ -63,7 +63,7 @@ class Game:
                         print("You recovered " + str(enemy["gold"]) + " gold")
                         self.player.n_gold += enemy["gold"]
                         self.player.stats["gold"] += enemy["gold"]
-                        self.end_day_script.append(f"Won a fight and got {enemy["gold"]} gold")
+                        self.end_day_script.append(f"Won a fight and got {enemy['gold']} gold")
                     elif combat_result == "death":
                         if self.player.n_wins < 5:
                             print(self.player.name + " has died. They pressed their luck.")
@@ -92,7 +92,7 @@ class Game:
             elif player_input == "SM":
                 shopping = True
                 while shopping:
-                    print(f"What would you like to buy? You have {self.player.stats["gold"]} gold.")
+                    print(f"What would you like to buy? You have {self.player.stats['gold']} gold.")
                     for key in DEFAULT_SHOP:
                         if key in self.bought_items:
                             print(key + ": BOUGHT")
@@ -132,7 +132,8 @@ class Game:
         self.can_fight, self.can_rest = True, True
 
         # prints all statements that were added to self.end_day_script throughout the day
-        print(f"{LINE_BREAK}\n{"\n".join(self.end_day_script)}\n{LINE_BREAK}")
+        end_day_str = '\n'.join(self.end_day_script)
+        print(f"{LINE_BREAK}\n{end_day_str}\n{LINE_BREAK}")
         self.end_day_script.clear()
         self.end_day_script.append(f"Day {self.n_days} begins")
 
