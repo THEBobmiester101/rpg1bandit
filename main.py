@@ -5,6 +5,7 @@ Description here
 IMPORTS GO HERE
 """
 from game import Game
+from shop import Shop
 
 
 

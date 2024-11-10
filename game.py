@@ -1,30 +1,30 @@
+from gameBase import GameBase
 from player import Player
+from shop import Shop
 import random
 
 
-DEFAULT_SHOP = {
-    "A hearty meal":                        3,
-    "Gamble":                               10,
-    "Basic combat training":                15,
-    "Services of a skilled weaponsmith":    40,
-    "Services of a skilled tanner":         50,
-    "Magic Shop: ring of the fleet fox":    65,
-    "Magic Shop: vicious ring":             80,
-    "Nothin' else":                         0
-}
-REPEATABLE_BUYS = [
-    "A hearty meal",
-    "Gamble"
-]
+
 LINE_BREAK = "----------------------------------"
-GAME_OPTIONS = "(FT) Find enemy to fight\n(RR) Rest and recover\n(SM) Spend money\n(ND) Next day\n(Q) Quit"
-COMBAT_OPTIONS = ["Attack", "Dodge", "Run Away"]
+GAME_OPTIONS = [
+    "Find enemy to fight",
+    "Rest and recover",
+    "Visit shop",
+    "Next day",
+    "Quit"
+]
+COMBAT_OPTIONS = [
+    "Attack", 
+    "Dodge", 
+    "Run Away"
+]
 
 
 
-class Game:
+class Game(GameBase):
     
     player: Player
+    shop: Shop
     n_days: int = 1
     end_day_script = []
     can_fight: bool = True
@@ -35,9 +35,10 @@ class Game:
     def __init__(self, console_line_height):
         player_name = input("Choose a name for your character: ")
         self.player = Player(player_name, {})
+        self.shop = Shop()
 
-        for line in range(console_line_height):
-            print("")
+        for _ in range(console_line_height):
+            print()
         self.end_day_script.append(f"{self.player.catch_phrase}\nDay 1 begins")
 
     
@@ -47,13 +48,12 @@ class Game:
 
 
     def loop(self) -> bool:    
-        is_daytime = True
         self.newDay()
-        while is_daytime:
-            #print(f"PLAYER HEALTH IS {self.player.stats["health"]}")
-            player_input = input("What would you like to do?\n" + GAME_OPTIONS + "\n>")
 
-            if player_input == "FT":
+        while True:
+            print("What would you like to do?")
+            player_input = GameBase.get_input_option(GAME_OPTIONS)
+            if player_input == 1:
                 if self.can_fight:
                     self.can_rest = False
                     enemy = self.getEnemyOptions()
@@ -78,7 +78,7 @@ class Game:
                 else:
                     print("You're taking it easy today, remember?")
 
-            elif player_input == "RR":
+            elif player_input == 2:
                 if self.can_rest:
                     self.player.playerHeal()
                     self.can_fight, self.can_rest = False, False
@@ -89,44 +89,26 @@ class Game:
                 else:
                     print("You're already taking the day to rest!")
 
-            elif player_input == "SM":
-                shopping = True
-                while shopping:
-                    print(f"What would you like to buy? You have {self.player.stats['gold']} gold.")
-                    for key in DEFAULT_SHOP:
-                        if key in self.bought_items:
-                            print(key + ": BOUGHT")
-                        else:
-                            print(key + ": " + str(DEFAULT_SHOP[key]))
-                    item_index = int(input("(Enter 1-" + str(DEFAULT_SHOP.keys().__len__()) + ")")) - 1
-                    item_name = list(DEFAULT_SHOP.keys())[item_index]
-                    if (item_name != "Nothin' else") and (item_name not in self.bought_items):
-                        print(item_name)
-                        if self.player.hasGold(DEFAULT_SHOP[item_name]):
-                            self.player.stats["gold"] -= DEFAULT_SHOP[item_name]
-                            self.bought_items.append(item_name)
-                            self.end_day_script.append(f"Bought {item_name}")
-                    elif item_name in self.bought_items:
-                        print("Already bought that!")
-                    else:
-                        shopping = False
+            elif player_input == 3:
+                print("\nWelcome to the shop.")
+                while self.shop.loop(self.player):
+                    print()
+                print("See you around\n")
 
-            elif player_input == "ND":
-                is_daytime = False
+            elif player_input == 4:
                 self.end_day_script.append(f"Day {self.n_days} ends")
+                break
 
-            elif player_input == "Q":
+            elif player_input == 5:
                 return False
+            
+            print()
 
         return True
 
 
     def newDay(self):
         self.n_days += 1
-
-        for item in self.bought_items:
-            if item in REPEATABLE_BUYS:
-                self.bought_items.remove(item)
 
         self.player.playerHeal()
         self.can_fight, self.can_rest = True, True
@@ -151,6 +133,7 @@ class Game:
             enemy_stats["dodge"].append(random.randint(-2, 3))
             enemy_stats["health"].append(random.randint(1, 10) * 3)
 
+        print()
         enemy_choice = int(self.reviewEnemies(enemy_stats)) - 1
         print("Chose enemy " + str(enemy_choice + 1))
 
@@ -185,8 +168,8 @@ class Game:
             if (turn_count > 0) or player_is_faster:
                 player_turn_choice = 2
                 while player_turn_choice == 2:
-                    player_turn_choice = int(input("What will you do? " + ", ".join(COMBAT_OPTIONS) + "?\n(1-" +
-                                            str(COMBAT_OPTIONS.__len__()) + ")"))
+                    print("What will you do?")
+                    player_turn_choice = GameBase.get_input_option(COMBAT_OPTIONS)
                     if player_turn_choice == 1:
                         attack_damage = self.player.stats["attack"]
                         if random.randint(1, 4) == 4:
@@ -298,6 +281,8 @@ class Game:
             gold = max(gold, 1) # each job is worth at least 1 gold
             enemies["gold"].append(gold)
             print("Enemy " + str(enemy + 1) + " is " + ", ".join(asessing_statements))
-        choice = input("Which enemy would you like to face? Choose between " + str(enemies["number"]))
+
+        print("Which enemy would you like to face?")
+        choice = GameBase.get_number_input(1, enemies["number"].__len__())
         return choice
     

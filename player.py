@@ -1,3 +1,7 @@
+from article import Item
+
+
+
 BASE_STATS = {
     # combat stats
     "attack":           2,
@@ -19,41 +23,29 @@ class Player:
     n_gold: int = 0
     stats: dict = {}
     catch_phrase: str = "\"Shit... out of money again\""
+    items: list = []
 
 
     def __init__(self, name: str, adjustment_stats: dict):
-        # set name 
         self.name = name
-        self.setStats(adjustment_stats, BASE_STATS)
+        self.setStats(BASE_STATS, adjustment_stats)
         #print(f"BASE STATS: {BASE_STATS}\nADJUSTMENT STATS: {adjustment_stats}")
 
 
-    def setStats(self, adjustment_stats, base_stats=None):
-        # set stats
+    def setStats(self, base_stats, adjustment_stats = {}):
         #print(f"base_stats = <{base_stats}>\nadjustment_stats: <{adjustment_stats}>")
-        if base_stats:
-            for stat in base_stats:
-                self.stats[stat] = base_stats[stat]
-                if stat in adjustment_stats:
-                    self.stats[stat] += adjustment_stats[stat]
-        else:
-            for stat in self.stats:
-                if stat in adjustment_stats:
-                    # checks for a stat maximum and enforces it when adding stats. E.g. the "health" stat cannot
-                    #   exceed the "max_health" stat.
-                    if ("max_" + stat) in self.stats:
-                        self.stats[stat] = min(self.stats["max_" + stat], self.stats[stat] + adjustment_stats[stat])
-                    else:
-                        self.stats[stat] += adjustment_stats[stat]
+        for stat in base_stats:
+            self.stats[stat] = base_stats[stat]
+            if stat in adjustment_stats:
+                self.stats[stat] += adjustment_stats[stat]
+
+        for stat in self.stats:
+            if ("max_" + stat) in self.stats:
+                self.stats[stat] = min(self.stats["max_" + stat], self.stats[stat])
 
 
-    def hasGold(self, cost: int):
-        if self.stats["gold"] >= cost:
-            print("Purchased item")
-            return True
-        else:
-            print("You ain't got the cash")
-            return False
+    def has_gold(self, cost: int):
+        return True if self.stats["gold"] >= cost else False
     
 
     def playerHeal(self):
