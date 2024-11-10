@@ -22,7 +22,7 @@ class Shop:
         }
 
 
-    def loop(self, player: Player) -> bool:
+    def loop(self, game: GameBase, player: Player) -> bool:
         self.articles = dict(sorted(
             self.articles.items(), key = lambda x: abs(x[1]), reverse = True))
 
@@ -49,7 +49,8 @@ class Shop:
             if article is Item:
                 player.items.append(article)
             print(f"Purchased: {article.name}")
-
+            game.end_day_script.append(f"Bought: {article.name}")
+            
         else:
             print(f"Sorry pal, you ain't got the cash")
 

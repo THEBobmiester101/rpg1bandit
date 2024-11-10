@@ -26,7 +26,6 @@ class Game(GameBase):
     player: Player
     shop: Shop
     n_days: int = 1
-    end_day_script = []
     can_fight: bool = True
     can_rest: bool = True
     bought_items = []
@@ -91,7 +90,7 @@ class Game(GameBase):
 
                 case 3:
                     print("\nWelcome to the shop.")
-                    while self.shop.loop(self.player):
+                    while self.shop.loop(self, self.player):
                         print()
                     print("See you around\n")
 

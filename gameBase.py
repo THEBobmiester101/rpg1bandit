@@ -4,6 +4,9 @@ from abc import ABC
 
 class GameBase(ABC):
 
+    end_day_script = []
+
+
     @staticmethod
     def get_number_input(i_from: int, i_to: int) -> int:
         n = i_from - 1
@@ -13,6 +16,7 @@ class GameBase(ABC):
             except:
                 pass        
         return n
+
 
     @staticmethod
     def get_input_option(options: list) -> int:
