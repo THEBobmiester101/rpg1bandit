@@ -57,24 +57,24 @@ class Game(GameBase):
                     if self.can_fight:
                         self.can_rest = False
                         enemy = self.getEnemyOptions()
-                        combat_result = self.fightSequence(enemy)
-                        if combat_result == "win":
-                            self.player.n_wins += 1
-                            print("You recovered " + str(enemy["gold"]) + " gold")
-                            self.player.n_gold += enemy["gold"]
-                            self.player.stats["gold"] += enemy["gold"]
-                            self.end_day_script.append(f"Won a fight and got {enemy['gold']} gold")
-                        elif combat_result == "death":
-                            if self.player.n_wins < 5:
-                                print(self.player.name + " has died. They pressed their luck.")
-                            elif self.player.n_wins < 10:
-                                print(self.player.name + "\'s luck caught up with them. It took a while.")
-                            elif self.player.n_wins < 25:
-                                print(self.player.name + " was finally struck down. They left a legacy.")
-                            return False
-                        elif combat_result == "ran":
-                            self.end_day_script.append("Ran away from a fight")
-                            print("Made it out alive")
+                        match self.fightSequence(enemy):
+                            case "win":
+                                self.player.n_wins += 1
+                                print("You recovered " + str(enemy["gold"]) + " gold")
+                                self.player.n_gold += enemy["gold"]
+                                self.player.stats["gold"] += enemy["gold"]
+                                self.end_day_script.append(f"Won a fight and got {enemy['gold']} gold")
+                            case "death":
+                                if self.player.n_wins < 5:
+                                    print(self.player.name + " has died. They pressed their luck.")
+                                elif self.player.n_wins < 10:
+                                    print(self.player.name + "\'s luck caught up with them. It took a while.")
+                                elif self.player.n_wins < 25:
+                                    print(self.player.name + " was finally struck down. They left a legacy.")
+                                return False
+                            case "ran":
+                                self.end_day_script.append("Ran away from a fight")
+                                print("Made it out alive")
                     else:
                         print("You're taking it easy today, remember?")
 
