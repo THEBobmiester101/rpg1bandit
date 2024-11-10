@@ -52,55 +52,55 @@ class Game(GameBase):
 
         while True:
             print("What would you like to do?")
-            player_input = GameBase.get_input_option(GAME_OPTIONS)
-            if player_input == 1:
-                if self.can_fight:
-                    self.can_rest = False
-                    enemy = self.getEnemyOptions()
-                    combat_result = self.fightSequence(enemy)
-                    if combat_result == "win":
-                        self.player.n_wins += 1
-                        print("You recovered " + str(enemy["gold"]) + " gold")
-                        self.player.n_gold += enemy["gold"]
-                        self.player.stats["gold"] += enemy["gold"]
-                        self.end_day_script.append(f"Won a fight and got {enemy['gold']} gold")
-                    elif combat_result == "death":
-                        if self.player.n_wins < 5:
-                            print(self.player.name + " has died. They pressed their luck.")
-                        elif self.player.n_wins < 10:
-                            print(self.player.name + "\'s luck caught up with them. It took a while.")
-                        elif self.player.n_wins < 25:
-                            print(self.player.name + " was finally struck down. They left a legacy.")
-                        return False
-                    elif combat_result == "ran":
-                        self.end_day_script.append("Ran away from a fight")
-                        print("Made it out alive")
-                else:
-                    print("You're taking it easy today, remember?")
+            match GameBase.get_input_option(GAME_OPTIONS):
+                case 1:
+                    if self.can_fight:
+                        self.can_rest = False
+                        enemy = self.getEnemyOptions()
+                        combat_result = self.fightSequence(enemy)
+                        if combat_result == "win":
+                            self.player.n_wins += 1
+                            print("You recovered " + str(enemy["gold"]) + " gold")
+                            self.player.n_gold += enemy["gold"]
+                            self.player.stats["gold"] += enemy["gold"]
+                            self.end_day_script.append(f"Won a fight and got {enemy['gold']} gold")
+                        elif combat_result == "death":
+                            if self.player.n_wins < 5:
+                                print(self.player.name + " has died. They pressed their luck.")
+                            elif self.player.n_wins < 10:
+                                print(self.player.name + "\'s luck caught up with them. It took a while.")
+                            elif self.player.n_wins < 25:
+                                print(self.player.name + " was finally struck down. They left a legacy.")
+                            return False
+                        elif combat_result == "ran":
+                            self.end_day_script.append("Ran away from a fight")
+                            print("Made it out alive")
+                    else:
+                        print("You're taking it easy today, remember?")
 
-            elif player_input == 2:
-                if self.can_rest:
-                    self.player.playerHeal()
-                    self.can_fight, self.can_rest = False, False
-                    self.end_day_script.append("Rested for most of the day")
-                    print("Took most of the day to rest and recover")
-                elif self.can_fight:
-                    print("You can't rest on a day you got in a fight!")
-                else:
-                    print("You're already taking the day to rest!")
+                case 2:
+                    if self.can_rest:
+                        self.player.playerHeal()
+                        self.can_fight, self.can_rest = False, False
+                        self.end_day_script.append("Rested for most of the day")
+                        print("Took most of the day to rest and recover")
+                    elif self.can_fight:
+                        print("You can't rest on a day you got in a fight!")
+                    else:
+                        print("You're already taking the day to rest!")
 
-            elif player_input == 3:
-                print("\nWelcome to the shop.")
-                while self.shop.loop(self.player):
-                    print()
-                print("See you around\n")
+                case 3:
+                    print("\nWelcome to the shop.")
+                    while self.shop.loop(self.player):
+                        print()
+                    print("See you around\n")
 
-            elif player_input == 4:
-                self.end_day_script.append(f"Day {self.n_days} ends")
-                break
+                case 4:
+                    self.end_day_script.append(f"Day {self.n_days} ends")
+                    break
 
-            elif player_input == 5:
-                return False
+                case 5:
+                    return False
             
             print()
 
