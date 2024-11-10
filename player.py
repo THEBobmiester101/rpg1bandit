@@ -28,15 +28,18 @@ class Player:
 
     def __init__(self, name: str, adjustment_stats: dict):
         self.name = name
-        self.setStats(BASE_STATS, adjustment_stats)
+        self.addStats(adjustment_stats, BASE_STATS)
         #print(f"BASE STATS: {BASE_STATS}\nADJUSTMENT STATS: {adjustment_stats}")
+        #print(f"PLAYER STATS ON __INIT__: {self.stats}")
 
 
-    def setStats(self, base_stats, adjustment_stats = {}):
+    def addStats(self, adjustment_stats, base_stats = {}):
         #print(f"base_stats = <{base_stats}>\nadjustment_stats: <{adjustment_stats}>")
         for stat in base_stats:
             self.stats[stat] = base_stats[stat]
-            if stat in adjustment_stats:
+
+        for stat in adjustment_stats:
+            if stat in self.stats:
                 self.stats[stat] += adjustment_stats[stat]
 
         for stat in self.stats:
@@ -53,9 +56,9 @@ class Player:
         # if player has eaten a hearty meal they restore 1/2 their hp, otherwise they restore 1/4th
         #   both restored values are rounded up. Hence dividing by 1.9 or 3.9 respectively
         if self.stats["has_eaten"]:
-            self.setStats({"health": round(self.stats["max_health"] / 1.9)})
+            self.addStats({"health": round(self.stats["max_health"] / 1.9)})
         else:
-            self.setStats({"health": round(self.stats["max_health"] / 3.9)})
+            self.addStats({"health": round(self.stats["max_health"] / 3.9)})
         self.stats["has_eaten"] = False
 
         #print(f"HEALED {self.stats["health"] - current_health} HEALTH AFTER RESTING")
