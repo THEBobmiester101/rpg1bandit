@@ -1,9 +1,19 @@
 from typing import Callable
 from abc import ABC
+from random import randint
 
 
 
-def unimplemented():
+def unimplemented(real_parameter, im_with_real):
+    print("Item not implemented yet")
+    pass
+
+
+def gamble(player, bet_amount):
+    gold_won = randint(0, 2) * (bet_amount - 1)
+    player.stats["gold"] += gold_won
+    player.n_gold_earned += gold_won - bet_amount
+    print(f"Got back {gold_won} gold")
     pass
 
 

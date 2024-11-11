@@ -1,6 +1,6 @@
 from gameBase import GameBase
 from player import Player
-from article import ImmediateArticle, Item
+from article import ImmediateArticle, Item, gamble
 
 
 
@@ -12,10 +12,10 @@ class Shop:
     def __init__(self):
         self.articles = {
             ImmediateArticle("A hearty meal",                     3 ): 100,
-            ImmediateArticle("Gamble",                            10): -1,
-            ImmediateArticle("Basic combat training",             15): 5,
-            ImmediateArticle("Services of a skilled weaponsmith", 40): 3,
-            ImmediateArticle("Services of a skilled tanner",      50): 3,
+            ImmediateArticle("Gamble",                            10, gamble): -1,
+            ImmediateArticle("Basic combat training",             15): 2,
+            ImmediateArticle("Services of a skilled weaponsmith", 40): 2,
+            ImmediateArticle("Services of a skilled tanner",      50): 2,
             Item(            "Magic Shop: ring of the fleet fox", 65): 1,
             Item(            "Magic Shop: vicious ring",          80): 1,
             ImmediateArticle("Nothin' else",                      0 ): -.1
@@ -44,11 +44,12 @@ class Shop:
         
         if player.has_gold(article.cost):
             player.stats["gold"] -= article.cost
-            self.articles[article] -= 1
-            article.immediate()
+            if self.articles[article] > 0:
+                self.articles[article] -= 1
             if article is Item:
                 player.items.append(article)
             print(f"Purchased: {article.name}")
+            article.immediate(player, article.cost)
             game.end_day_script.append(f"Bought: {article.name}")
             
         else:

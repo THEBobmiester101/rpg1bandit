@@ -43,7 +43,7 @@ class Game(GameBase):
     
     def __del__(self):
         print(self.player.name + "\'s journey ends.")
-        print(f"Reached day {self.n_days}, killed {self.player.n_wins}, earned {self.player.n_gold} gold")
+        print(f"Reached day {self.n_days}, killed {self.player.n_wins}, earned {self.player.n_gold_earned} gold")
 
 
     def loop(self) -> bool:    
@@ -60,7 +60,7 @@ class Game(GameBase):
                             case "win":
                                 self.player.n_wins += 1
                                 print("You recovered " + str(enemy["gold"]) + " gold")
-                                self.player.n_gold += enemy["gold"]
+                                self.player.n_gold_earned += enemy["gold"]
                                 self.player.stats["gold"] += enemy["gold"]
                                 self.end_day_script.append(f"Won a fight and got {enemy['gold']} gold")
                             case "death":
@@ -92,7 +92,7 @@ class Game(GameBase):
                     print("\nWelcome to the shop.")
                     while self.shop.loop(self, self.player):
                         print()
-                    print("See you around\n")
+                    print("See you 'round\n")
 
                 case 4:
                     self.end_day_script.append(f"Day {self.n_days} ends")

@@ -20,7 +20,7 @@ class Player:
 
     name: str
     n_wins: int = 0
-    n_gold: int = 0
+    n_gold_earned: int = 0
     stats: dict = {}
     catch_phrase: str = "\"Shit... out of money again\""
     items: list = []
