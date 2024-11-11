@@ -18,7 +18,7 @@ def gamble(player, bet_amount):
 
 
 
-class Article(ABC):
+class Buyable(ABC):
 
     name: str
     cost: int
@@ -31,12 +31,12 @@ class Article(ABC):
 
 
 
-class ImmediateArticle(Article):
+class Service(Buyable):
     pass
         
 
 
-class Item(Article):
+class Item(Buyable):
 
     per_round: Callable
 

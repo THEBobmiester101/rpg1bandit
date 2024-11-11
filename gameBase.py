@@ -20,9 +20,7 @@ class GameBase(ABC):
 
     @staticmethod
     def get_input_option(options: list) -> int:
-        i = 1
-        for opt in options:
-            print(f"({i}) {opt}")
-            i += 1
+        for i, opt in enumerate(options):
+            print(f"({i+1}) {opt}")
 
         return GameBase.get_number_input(1, options.__len__())

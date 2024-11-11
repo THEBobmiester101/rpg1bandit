@@ -1,22 +1,16 @@
-from article import Item
+from fightable import Fightable
+
 
 
 
 BASE_STATS = {
-    # combat stats
-    "attack":           2,
-    "crit":             1,
-    "natural_armor":    1,
-    "dodge":            0,
-    "max_health":       10,
-    "health":           10,
     # non-combat stats
     "has_eaten":        False,
-    "gold":             0
+    "gold":             10
 }
 
 
-class Player:
+class Player(Fightable):
 
     name: str
     n_wins: int = 0
@@ -27,6 +21,14 @@ class Player:
 
 
     def __init__(self, name: str, adjustment_stats: dict):
+        super(Player, self).__init__(
+            max_health    = 10,
+            health        = 10,
+            attack        = 2,
+            crit          = 1,
+            natural_armor = 1,
+            dodge         = 0
+        )
         self.name = name
         self.addStats(adjustment_stats, BASE_STATS)
         #print(f"BASE STATS: {BASE_STATS}\nADJUSTMENT STATS: {adjustment_stats}")
@@ -52,13 +54,10 @@ class Player:
     
 
     def playerHeal(self):
-        current_health = self.stats["health"]
         # if player has eaten a hearty meal they restore 1/2 their hp, otherwise they restore 1/4th
         #   both restored values are rounded up. Hence dividing by 1.9 or 3.9 respectively
-        if self.stats["has_eaten"]:
-            self.addStats({"health": round(self.stats["max_health"] / 1.9)})
-        else:
-            self.addStats({"health": round(self.stats["max_health"] / 3.9)})
+        heal_amount = self.max_health / (1.9 if self.stats["has_eaten"] else 3.9)
+        self.heal(round(heal_amount))
         self.stats["has_eaten"] = False
 
         #print(f"HEALED {self.stats["health"] - current_health} HEALTH AFTER RESTING")

@@ -1,56 +1,54 @@
 from gameBase import GameBase
 from player import Player
-from article import ImmediateArticle, Item, gamble
+from buyable import *
 
 
 
 class Shop:
 
-    articles: dict = {}
+    buyables: dict = {}
 
     
     def __init__(self):
-        self.articles = {
-            ImmediateArticle("A hearty meal",                     3 ): 100,
-            ImmediateArticle("Gamble",                            10, gamble): -1,
-            ImmediateArticle("Basic combat training",             15): 2,
-            ImmediateArticle("Services of a skilled weaponsmith", 40): 2,
-            ImmediateArticle("Services of a skilled tanner",      50): 2,
-            Item(            "Magic Shop: ring of the fleet fox", 65): 1,
-            Item(            "Magic Shop: vicious ring",          80): 1,
-            ImmediateArticle("Nothin' else",                      0 ): -.1
+        self.buyables = {
+            Service("A hearty meal",                     3 ):          100,
+            Service("Gamble",                            10, gamble): -1,
+            Service("Basic combat training",             15):          2,
+            Service("Services of a skilled weaponsmith", 40):          2,
+            Service("Services of a skilled tanner",      50):          2,
+            Item(   "Magic Shop: ring of the fleet fox", 65):          1,
+            Item(   "Magic Shop: vicious ring",          80):          1,
+            Service("Nothin' else",                      0 ):         -.1
         }
 
 
     def loop(self, game: GameBase, player: Player) -> bool:
-        self.articles = dict(sorted(
-            self.articles.items(), key = lambda x: abs(x[1]), reverse = True))
+        self.buyables = dict(sorted(
+            self.buyables.items(), key = lambda x: abs(x[1]), reverse = True))
 
         print(f"What would you like to buy? (You have {player.stats['gold']} gold)\n")
 
-        i = 1
-        for article, quantity in self.articles.items():
+        for i, (buyable, quantity) in enumerate(self.buyables.items()):
             if quantity > 0:
-                print(f"({i}) {article.name: <40} {article.cost: >10} gold {quantity: >10} pcs")
+                print(f"({i+1}) {buyable.name: <40} {buyable.cost: >10} gold {quantity: >10} pcs")
             elif quantity < 0:
-                print(f"({i}) {article.name: <40} {article.cost: >10} gold")
-            i += 1
+                print(f"({i+1}) {buyable.name: <40} {buyable.cost: >10} gold")
 
-        i = GameBase.get_number_input(1, self.articles.items().__len__()) - 1
-        article = list(self.articles.keys())[i]
+        i = GameBase.get_number_input(1, self.buyables.items().__len__()) - 1
+        buyable = list(self.buyables.keys())[i]
 
-        if article.name == "Nothin' else":
+        if buyable.name == "Nothin' else":
             return False
         
-        if player.has_gold(article.cost):
-            player.stats["gold"] -= article.cost
-            if self.articles[article] > 0:
-                self.articles[article] -= 1
-            if article is Item:
-                player.items.append(article)
-            print(f"Purchased: {article.name}")
-            article.immediate(player, article.cost)
-            game.end_day_script.append(f"Bought: {article.name}")
+        if player.has_gold(buyable.cost):
+            player.stats["gold"] -= buyable.cost
+            if self.buyables[buyable] > 0:
+                self.buyables[buyable] -= 1
+            if buyable is Item:
+                player.items.append(buyable)
+            print(f"Purchased: {buyable.name}")
+            buyable.immediate(player, buyable.cost)
+            game.end_day_script.append(f"Bought: {buyable.name}")
             
         else:
             print(f"Sorry pal, you ain't got the cash")
