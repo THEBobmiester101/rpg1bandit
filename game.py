@@ -26,7 +26,6 @@ class Game(GameBase):
     n_days: int = 1
     can_fight: bool = True
     can_rest: bool = True
-    bought_items = []
 
 
     def __init__(self, console_line_height):
@@ -36,7 +35,8 @@ class Game(GameBase):
 
         for _ in range(console_line_height):
             print()
-        self.end_day_script.append(f"{self.player.catch_phrase}\nDay 1 begins")
+        self.end_day_script.append("Day 1 begins")
+        self.newDay()
 
     
     def __del__(self):
@@ -45,59 +45,58 @@ class Game(GameBase):
 
 
     def loop(self) -> bool:    
-        self.newDay()
-
-        while True:
-            print("What would you like to do?")
-            match GameBase.get_input_option(GAME_OPTIONS):
-                case 1:
-                    if not self.can_fight:
-                        print("You're taking it easy today, remember?")
-                        break   # skip following instructions if you can't fight
-                    
+        print("What would you like to do?")
+        match GameBase.get_input_option(GAME_OPTIONS):
+            case 1:
+                if self.can_fight:
                     self.can_rest = False
                     fight = Fight(self, 3)
                     while fight.loop(): 
                         pass
                     del fight
-                    
-                case 2:
-                    if self.can_rest:
-                        self.player.playerHeal()
-                        self.can_fight, self.can_rest = False, False
-                        self.end_day_script.append("Rested for most of the day")
-                        print("Took most of the day to rest and recover")
-                    elif self.can_fight:
-                        print("You can't rest on a day you got in a fight!")
-                    else:
-                        print("You're already taking the day to rest!")
+                else:
+                    print("You're taking it easy today, remember?")
 
-                case 3:
-                    print("\nWelcome to the shop.")
-                    while self.shop.loop(self, self.player):
-                        print()
-                    print("See you 'round\n")
+            case 2:
+                if self.can_rest:
+                    self.player.playerHeal()
+                    self.can_fight, self.can_rest = False, False
+                    self.end_day_script.append("Rested for most of the day")
+                    print("Took most of the day to rest and recover")
+                elif self.can_fight:
+                    print("You can't rest on a day you got in a fight!")
+                else:
+                    print("You're already taking the day to rest!")
 
-                case 4:
-                    self.end_day_script.append(f"Day {self.n_days} ends")
-                    break
+            case 3:
+                print("\nWelcome to the shop.")
+                while self.shop.loop(self, self.player):
+                    print()
+                print("See you 'round\n")
 
-                case 5:
-                    return False
-            
-            print()
+            case 4:
+                self.end_day_script.append(f"Day {self.n_days} ends")
+                self.newDay()
 
+            case 5:
+                return False
+        
+        print()
         return True
 
 
     def newDay(self):
-        self.n_days += 1
-
         self.player.playerHeal()
         self.can_fight, self.can_rest = True, True
 
         # prints all statements that were added to self.end_day_script throughout the day
+        print(LINE_BREAK)
+        if self.n_days == 1:
+            self.player.say(self.player.catch_phrase)
         end_day_str = '\n'.join(self.end_day_script)
-        print(f"{LINE_BREAK}\n{end_day_str}\n{LINE_BREAK}")
+        print(end_day_str)
+        print(LINE_BREAK)
+        
+        self.n_days += 1
         self.end_day_script.clear()
         self.end_day_script.append(f"Day {self.n_days} begins")

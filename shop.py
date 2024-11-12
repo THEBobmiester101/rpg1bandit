@@ -1,4 +1,4 @@
-from gameBase import GameBase
+from gameBase import *
 from player import Player
 from buyable import *
 
@@ -6,11 +6,11 @@ from buyable import *
 
 class Shop:
 
-    buyables: dict = {}
+    stock: dict = {}
 
     
     def __init__(self):
-        self.buyables = {
+        self.stock = {
             Service("A hearty meal",                     3 ):          100,
             Service("Gamble",                            10, gamble): -1,
             Service("Basic combat training",             15):          2,
@@ -23,35 +23,43 @@ class Shop:
 
 
     def loop(self, game: GameBase, player: Player) -> bool:
-        self.buyables = dict(sorted(
-            self.buyables.items(), key = lambda x: abs(x[1]), reverse = True))
-
-        print(f"What would you like to buy? (You have {player.stats['gold']} gold)\n")
-
-        for i, (buyable, quantity) in enumerate(self.buyables.items()):
-            if quantity > 0:
-                print(f"({i+1}) {buyable.name: <40} {buyable.cost: >10} gold {quantity: >10} pcs")
-            elif quantity < 0:
-                print(f"({i+1}) {buyable.name: <40} {buyable.cost: >10} gold")
-
-        i = GameBase.get_number_input(1, self.buyables.items().__len__()) - 1
-        buyable = list(self.buyables.keys())[i]
-
+        print("What would you like to buy?", 
+              f"(You have {cstr(player.stats['gold'], colors.YELLOW)} gold)\n")
+        
+        buyable = self.__select()
         if buyable.name == "Nothin' else":
             return False
         
+        self.__sell(game, player, buyable)
+        return True
+    
+
+    def __select(self) -> Buyable:
+        options = []
+        options_buyable = []
+        for i, (buyable, quantity) in enumerate(self.stock.items()):
+            if quantity == 0:
+                continue
+            s = f"{buyable.name: <40} "
+            if buyable.cost != 0:
+                s += f"{cstr(buyable.cost, colors.YELLOW): >20} gold "
+            if quantity > 0:
+                s += f"{cstr(quantity, colors.MAGENTA): >20} pcs "
+            options.append(s)
+            options_buyable.append(buyable)
+
+        return options_buyable[GameBase.get_input_option(options) - 1]
+    
+
+    def __sell(self, game: GameBase, player: Player, buyable: Buyable):
         if player.has_gold(buyable.cost):
+            self.stock[buyable] -= 1 if self.stock[buyable] > 0 else 0
             player.stats["gold"] -= buyable.cost
-            if self.buyables[buyable] > 0:
-                self.buyables[buyable] -= 1
             if buyable is Item:
                 player.items.append(buyable)
-            print(f"Purchased: {buyable.name}")
             buyable.immediate(player, buyable.cost)
+            print(f"Purchased: {buyable.name}")
             game.end_day_script.append(f"Bought: {buyable.name}")
             
         else:
             print(f"Sorry pal, you ain't got the cash")
-
-        return True
-    

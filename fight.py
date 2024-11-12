@@ -1,6 +1,6 @@
 from player import Player
 from enemy import Enemy
-from gameBase import GameBase
+from gameBase import *
 
 
 
@@ -27,7 +27,7 @@ class Fight:
         print()
         enemies = [Enemy() for _ in range(n_enemies)]
         for i, enemy in enumerate(enemies):
-            print(f"Enemy {i+1} is {enemy.assess()[0]}")
+            print(f"Enemy {cstr(f'({i+1})', colors.GRAY)} is {enemy.assess()[0]}")
         print("Which enemy would you like to face?")
         i = GameBase.get_number_input(1, n_enemies)
         self.enemy = enemies[i - 1]
@@ -42,7 +42,7 @@ class Fight:
             self.player.n_wins += 1
             self.player.n_gold_earned += gold
             self.player.stats["gold"] += gold
-            print(f"You recovered {gold} gold")
+            print(f"You recovered {cstr(gold, colors.YELLOW)} gold")
             self.game.end_day_script.append(f"Won a fight and got {gold} gold")
 
         # death
@@ -63,7 +63,6 @@ class Fight:
     def loop(self) -> bool:
         player_is_faster = self.player.dodge >= self.enemy.dodge
         
-        print()
         if self.turn_count == 0:
             print(f"{'You' if player_is_faster else 'They'} make the first move")
 
@@ -71,6 +70,8 @@ class Fight:
         if not (self.turn_count == 0 and player_is_faster):
             if not self.__enemy_turn():
                 return False
+
+        print()
 
         # player turn
         if not self.__player_turn():
@@ -84,13 +85,14 @@ class Fight:
     def __enemy_turn(self) -> bool:
         damage_dealt = self.enemy.strike(self.player)
         if damage_dealt > 4:
-            print("\"I'm... about to pass out.\" You can't take another hit like that")
+            self.player.say("I'm... about to pass out.")
+            cprint("You can't take another hit like that", colors.RED)
         elif damage_dealt > 1:
-            print("Took a nasty wound. That hurt like hell")
+            cprint("Took a nasty wound. That hurt like hell", colors.RED)
         elif damage_dealt == 1:
-            print("Took a minor wound")
+            cprint("Took a minor wound", colors.RED)
         else:
-            print("They couldn't manage to wound you")
+            cprint("They couldn't manage to wound you", colors.RED)
 
         return False if self.player.dead() else True
 
@@ -104,16 +106,16 @@ class Fight:
                     damage_dealt = self.player.strike(self.enemy)
                     print() # adds visual gap between combat turns
                     if self.enemy.dead():
-                        print("A felling strike")
+                        cprint("A felling strike", colors.GREEN)
                         return False
                     elif damage_dealt > 4:
-                        print("Strong attack")
+                        cprint("Strong attack", colors.GREEN)
                     elif damage_dealt > 1:
-                        print("Dealt some damage")
+                        cprint("Dealt some damage", colors.GREEN)
                     elif damage_dealt == 1:
-                        print("Barely hurt them...")
+                        cprint("Barely hurt them...", colors.GREEN)
                     else:
-                        print("Dealt no damage")
+                        cprint("Dealt no damage", colors.GREEN)
                     return True
 
                 case 2:
@@ -121,7 +123,7 @@ class Fight:
 
                 case 3:
                     if self.player.dodge >= self.enemy.dodge:
-                        print("\"Made it out of there...\"")
+                        self.player.say("Made it out of there...")
                     else:
                         print("They get off a parting shot")
                     return False

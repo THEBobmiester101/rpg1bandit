@@ -1,5 +1,5 @@
 from fightable import Fightable
-
+from gameBase import *
 
 
 
@@ -10,13 +10,14 @@ BASE_STATS = {
 }
 
 
+
 class Player(Fightable):
 
     name: str
     n_wins: int = 0
     n_gold_earned: int = 0
     stats: dict = {}
-    catch_phrase: str = "\"Shit... out of money again\""
+    catch_phrase: str = "Shit... out of money again"
     items: list = []
 
 
@@ -61,3 +62,8 @@ class Player(Fightable):
         self.stats["has_eaten"] = False
 
         #print(f"HEALED {self.stats["health"] - current_health} HEALTH AFTER RESTING")
+
+    
+    def say(self, text: str):
+        c = cstr(f"\"{text}\"", colors.CYAN)
+        print(f"{self.name}: {c}")
