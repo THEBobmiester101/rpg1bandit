@@ -16,6 +16,27 @@ def gamble(player, bet_amount):
     print(f"Got back {gold_won} gold")
     pass
 
+def basicCombatTraining(player, _):
+    player.dodge += 1
+    player.crit += 1
+    pass
+
+def weaponSmith(player, _):
+    player.attack += 1
+    pass
+
+def armorSmith(player, _):
+    player.natural_armor += 1
+    pass
+
+def magicRingFleet(player, _):
+    player.dodge += 1
+    pass
+
+def magicRingVicious(player, _):
+    player.attack += 1
+    player.crit += 1
+    pass
 
 
 class Buyable(ABC):

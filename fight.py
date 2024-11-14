@@ -38,12 +38,11 @@ class Fight:
     def __del__(self):
         # win
         if self.enemy.health == 0:
-            _, gold = self.enemy.assess()
             self.player.n_wins += 1
-            self.player.n_gold_earned += gold
-            self.player.stats["gold"] += gold
-            print(f"You recovered {cstr(gold, colors.YELLOW)} gold")
-            self.game.end_day_script.append(f"Won a fight and got {gold} gold")
+            self.player.n_gold_earned += self.enemy.gold
+            self.player.stats["gold"] += self.enemy.gold
+            print(f"You recovered {cstr(self.enemy.gold, colors.YELLOW)} gold")
+            self.game.end_day_script.append(f"Won a fight and got {self.enemy.gold} gold")
 
         # death
         elif self.player.health == 0:

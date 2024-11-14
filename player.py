@@ -6,7 +6,7 @@ from gameBase import *
 BASE_STATS = {
     # non-combat stats
     "has_eaten":        False,
-    "gold":             10
+    "gold":             20
 }
 
 
@@ -65,5 +65,5 @@ class Player(Fightable):
 
     
     def say(self, text: str):
-        c = cstr(f"\"{text}\"", colors.CYAN)
+        c = cstr(f"\"{text}\"", colors.BLUE)
         print(f"{self.name}: {c}")

@@ -8,6 +8,7 @@ class Enemy(Fightable):
 
     attack: int
     crit: int
+    gold: int
 
 
     def __init__(self):
@@ -19,6 +20,8 @@ class Enemy(Fightable):
             natural_armor = randint(0, 2),
             dodge         = randint(-2, 3)
         )
+
+        _, self.gold = self.assess()
 
 
     def assess(self) -> tuple[str, int]:

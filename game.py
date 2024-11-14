@@ -36,6 +36,7 @@ class Game(GameBase):
         for _ in range(console_line_height):
             print()
         self.end_day_script.append("Day 1 begins")
+        self.player.say(self.player.catch_phrase)
         self.newDay()
 
     
@@ -91,8 +92,6 @@ class Game(GameBase):
 
         # prints all statements that were added to self.end_day_script throughout the day
         print(LINE_BREAK)
-        if self.n_days == 1:
-            self.player.say(self.player.catch_phrase)
         end_day_str = '\n'.join(self.end_day_script)
         print(end_day_str)
         print(LINE_BREAK)

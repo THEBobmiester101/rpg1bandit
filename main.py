@@ -1,5 +1,6 @@
 """
-Description here
+Ideas:
+    > Add begging for money
 """
 """
 IMPORTS GO HERE

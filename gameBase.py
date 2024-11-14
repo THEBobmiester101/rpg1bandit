@@ -4,6 +4,8 @@ from random import randint
 
 
 class colors:
+    DARK_CYAN = '\033[36m'
+    DARK_WHITE = '\033[37m'
     GRAY    = '\033[90m'
     RED     = '\033[91m'
     GREEN   = '\033[92m'
