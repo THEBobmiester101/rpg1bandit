@@ -27,7 +27,7 @@ class Fight:
         print()
         enemies = [Enemy() for _ in range(n_enemies)]
         for i, enemy in enumerate(enemies):
-            print(f"Enemy {cstr(f'({i+1})', colors.GRAY)} is {enemy.assess()[0]}")
+            print(f"Enemy {cstr(f'({i+1})', colors.GRAY)} is {enemy.assessment}")
         print("Which enemy would you like to face?")
         i = GameBase.get_number_input(1, n_enemies)
         self.enemy = enemies[i - 1]
@@ -42,7 +42,8 @@ class Fight:
             self.player.n_gold_earned += self.enemy.gold
             self.player.stats["gold"] += self.enemy.gold
             print(f"You recovered {cstr(self.enemy.gold, colors.YELLOW)} gold")
-            self.game.end_day_script.append(f"Won a fight and got {self.enemy.gold} gold")
+            self.game.end_day_script.append(
+                f"Won a fight and got {cstr(self.enemy.gold, colors.YELLOW)} gold")
 
         # death
         elif self.player.health == 0:
@@ -82,17 +83,7 @@ class Fight:
 
     # returns true if fight should continue
     def __enemy_turn(self) -> bool:
-        damage_dealt = self.enemy.strike(self.player)
-        if damage_dealt > 4:
-            self.player.say("I'm... about to pass out.")
-            cprint("You can't take another hit like that", colors.RED)
-        elif damage_dealt > 1:
-            cprint("Took a nasty wound. That hurt like hell", colors.RED)
-        elif damage_dealt == 1:
-            cprint("Took a minor wound", colors.RED)
-        else:
-            cprint("They couldn't manage to wound you", colors.RED)
-
+        self.enemy.strike(self.player)
         return False if self.player.dead() else True
 
 
@@ -102,20 +93,9 @@ class Fight:
             print("What will you do?")
             match GameBase.get_input_option(COMBAT_OPTIONS):
                 case 1:
-                    damage_dealt = self.player.strike(self.enemy)
                     print() # adds visual gap between combat turns
-                    if self.enemy.dead():
-                        cprint("A felling strike", colors.GREEN)
-                        return False
-                    elif damage_dealt > 4:
-                        cprint("Strong attack", colors.GREEN)
-                    elif damage_dealt > 1:
-                        cprint("Dealt some damage", colors.GREEN)
-                    elif damage_dealt == 1:
-                        cprint("Barely hurt them...", colors.GREEN)
-                    else:
-                        cprint("Dealt no damage", colors.GREEN)
-                    return True
+                    self.player.strike(self.enemy)
+                    return False if self.enemy.dead() else True
 
                 case 2:
                     print("This is no time for inaction, it's him or you!\n")

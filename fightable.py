@@ -40,7 +40,7 @@ class Fightable(ABC):
         return amount
 
 
-    # return damage amount applied to opponent
+    # return true damage amount taken by opponent
     def strike(self, opponent) -> int:
         damage = self.attack + (self.crit if randint(1, 4) == 4 else 0)
         return opponent.take_damage(damage)

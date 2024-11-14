@@ -1,6 +1,7 @@
 from typing import Tuple
 from fightable import Fightable
 from random import randint
+from gameBase import *
 
 
 
@@ -8,11 +9,12 @@ class Enemy(Fightable):
 
     attack: int
     crit: int
+    assessment: str
     gold: int
 
 
     def __init__(self):
-        super(Enemy, self).__init__(
+        super().__init__(
             max_health    = 30,
             health        = randint(1, 10) * 3,
             attack        = randint(1, 4),
@@ -21,15 +23,15 @@ class Enemy(Fightable):
             dodge         = randint(-2, 3)
         )
 
-        _, self.gold = self.assess()
+        self.assessment, self.gold = self.__assess()
 
 
-    def assess(self) -> tuple[str, int]:
-        statements = []
-        gold = 0
+    def __assess(self) -> tuple[str, int]:
         """ An enemy's worth is determined by its other stats. Each tier is generally worth (tier^2 - 1)/2 gold. 
         Damage is not halved, because it makes the other stats much more effective.
         """
+        statements = []
+        gold = 0
 
         damage = self.attack * 2 + self.crit
         if damage > 9:
@@ -76,3 +78,20 @@ class Enemy(Fightable):
 
         gold = max(gold, 1) # each job is worth at least 1 gold
         return ", ".join(statements), gold
+
+
+    def take_damage(self, amount):
+        amount = super().take_damage(amount)
+
+        if self.dead():
+            cprint("A felling strike", colors.GREEN)
+        elif amount > 4:
+            cprint("Strong attack", colors.GREEN)
+        elif amount > 1:
+            cprint("Dealt some damage", colors.GREEN)
+        elif amount == 1:
+            cprint("Barely hurt them...", colors.GREEN)
+        else:
+            cprint("Dealt no damage", colors.GREEN)
+
+        return amount

@@ -22,7 +22,7 @@ class Player(Fightable):
 
 
     def __init__(self, name: str, adjustment_stats: dict):
-        super(Player, self).__init__(
+        super().__init__(
             max_health    = 10,
             health        = 10,
             attack        = 2,
@@ -67,3 +67,19 @@ class Player(Fightable):
     def say(self, text: str):
         c = cstr(f"\"{text}\"", colors.BLUE)
         print(f"{self.name}: {c}")
+
+
+    def take_damage(self, amount):
+        amount = super().take_damage(amount)
+        
+        if amount > 4:
+            self.say("I'm... about to pass out.")
+            cprint("You can't take another hit like that", colors.RED)
+        elif amount > 1:
+            cprint("Took a nasty wound. That hurt like hell", colors.RED)
+        elif amount == 1:
+            cprint("Took a minor wound", colors.RED)
+        else:
+            cprint("They couldn't manage to wound you", colors.RED)
+
+        return amount
