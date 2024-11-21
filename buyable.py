@@ -1,12 +1,13 @@
 from typing import Callable
 from abc import ABC
 from random import randint
+from gameBase import *
 
 
 
 def unimplemented(real_parameter, im_with_real):
     print("Item not implemented yet")
-    pass
+    
 
 
 def gamble(player, bet_amount):
@@ -14,34 +15,34 @@ def gamble(player, bet_amount):
     player.stats["gold"] += gold_won
     player.n_gold_earned += gold_won - bet_amount
     print(f"Got back {gold_won} gold")
-    pass
+    
 
 def basicCombatTraining(player, _):
     player.dodge += 1
     player.crit += 1
-    pass
+    
 
 def weaponSmith(player, _):
     player.attack += 1
-    pass
+    
 
 def armorSmith(player, _):
     player.natural_armor += 1
-    pass
+    
 
 def magicRingFleet(player, _):
     player.dodge += 1
-    pass
+    
 
 def magicRingVicious(player, _):
     player.attack += 1
     player.crit += 1
-    pass
+    
 
 def magicGreatSword(player, _):
     player.attack += 2
-    print(f"\"Feed me... {"blood...", colors.RED}\"\nYou feel compelled to feed the greatsword blood")
-    pass
+    print(f"\"Feed me... {cstr('blood...', colors.RED)}\"")
+    print("You feel compelled to feed the greatsword blood")
 
 
 class Buyable(ABC):
