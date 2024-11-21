@@ -27,7 +27,7 @@ def cprint(text: str, col: colors):
 
 class GameBase(ABC):
 
-    end_day_script = []
+    day_events_list = []
 
 
     @staticmethod

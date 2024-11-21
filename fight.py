@@ -42,7 +42,7 @@ class Fight:
             self.player.n_gold_earned += self.enemy.gold
             self.player.stats["gold"] += self.enemy.gold
             print(f"You recovered {cstr(self.enemy.gold, colors.YELLOW)} gold")
-            self.game.end_day_script.append(
+            self.game.day_events_list.append(
                 f"Won a fight and got {cstr(self.enemy.gold, colors.YELLOW)} gold")
 
         # death
@@ -52,12 +52,12 @@ class Fight:
             elif self.player.n_wins < 10:
                 print(f"{self.player.name}\'s luck caught up with them. It took a while.")
             else:
-                print(f"{self.player.name} was finally struck down. They left a legacy.")
+                print(f"{self.player.name} was finally struck down. They forged a legacy.")
 
         # flight
         else:
             print("Made it out alive")
-            self.game.end_day_script.append(f"Ran away from a fight")
+            self.game.day_events_list.append(f"Ran away from a fight")
 
 
     def loop(self) -> bool:
@@ -105,4 +105,5 @@ class Fight:
                         self.player.say("Made it out of there...")
                     else:
                         print("They get off a parting shot")
+                        self.enemy.strike(self.player)
                     return False

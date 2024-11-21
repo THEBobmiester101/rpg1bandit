@@ -83,7 +83,9 @@ class Enemy(Fightable):
     def take_damage(self, amount):
         amount = super().take_damage(amount)
 
-        if self.dead():
+        if amount > round(self.max_health / 1.9):
+            cprint("Dealt massive damage", colors.GREEN)
+        elif self.dead():
             cprint("A felling strike", colors.GREEN)
         elif amount > 4:
             cprint("Strong attack", colors.GREEN)

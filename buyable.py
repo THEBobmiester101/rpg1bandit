@@ -38,6 +38,11 @@ def magicRingVicious(player, _):
     player.crit += 1
     pass
 
+def magicGreatSword(player, _):
+    player.attack += 2
+    print(f"\"Feed me... {"blood...", colors.RED}\"\nYou feel compelled to feed the greatsword blood")
+    pass
+
 
 class Buyable(ABC):
 

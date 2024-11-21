@@ -83,3 +83,15 @@ class Player(Fightable):
             cprint("They couldn't manage to wound you", colors.RED)
 
         return amount
+
+
+    def assess_health(self):
+        if self.health == self.max_health:
+            self.say("Feeling in tip-top shape")
+        elif self.health > (3/4*self.max_health):
+            self.say("Not feeling my best, but not too shabby")
+        elif self.health > (1/4*self.max_health):
+            self.say("Feeling beat")
+        elif self.health > (0/4*self.max_health):
+            self.say("Feeling like I'm on death's door")
+        return

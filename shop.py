@@ -11,14 +11,15 @@ class Shop:
     
     def __init__(self):
         self.stock = {
-            Service("A hearty meal",                     3 ):                           100,
-            Service("Gamble",                            10, gamble):                   -1,
-            Service("Basic combat training",             15, basicCombatTraining):    2,
-            Service("Services of a skilled weaponsmith", 40, weaponSmith):              2,
-            Service("Services of a skilled tanner",      50, armorSmith):               2,
-            Item(   "Magic Shop: ring of the fleet fox", 65, magicRingFleet):           1,
-            Item(   "Magic Shop: vicious ring",          80, magicRingVicious):         1,
-            Service("Nothin' else",                      0 ):                           -.1
+            Service("A hearty meal",                     3 ):                          100,
+            Service("Gamble",                            10,  gamble):                 -1,
+            Service("Basic combat training",             15,  basicCombatTraining):    2,
+            Service("Services of a skilled weaponsmith", 40,  weaponSmith):            2,
+            Service("Services of a skilled tanner",      50,  armorSmith):             2,
+            Item(   "Magic Shop: ring of the fleet fox", 65,  magicRingFleet):         1,
+            Item(   "Magic Shop: vicious ring",          80,  magicRingVicious):       1,
+            Item(   "Magic Shop: killer greatsword",     120, magicGreatSword):        1,
+            Service("Nothin' else",                      0 ):                          -.1
         }
 
 
@@ -59,7 +60,7 @@ class Shop:
                 player.items.append(buyable)
             buyable.immediate(player, buyable.cost)
             print(f"Purchased: {buyable.name}")
-            game.end_day_script.append(f"Bought: {buyable.name}")
+            game.day_events_list.append(f"Bought: {buyable.name}")
             
         else:
             print(f"Sorry pal, you ain't got the cash")

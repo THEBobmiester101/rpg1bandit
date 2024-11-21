@@ -23,7 +23,7 @@ class Game(GameBase):
     
     player: Player
     shop: Shop
-    n_days: int = 1
+    n_days: int = 0
     can_fight: bool = True
     can_rest: bool = True
 
@@ -35,8 +35,6 @@ class Game(GameBase):
 
         for _ in range(console_line_height):
             print()
-        self.end_day_script.append("Day 1 begins")
-        self.player.say(self.player.catch_phrase)
         self.newDay()
 
     
@@ -62,7 +60,7 @@ class Game(GameBase):
                 if self.can_rest:
                     self.player.playerHeal()
                     self.can_fight, self.can_rest = False, False
-                    self.end_day_script.append("Rested for most of the day")
+                    self.day_events_list.append("Rested for most of the day")
                     print("Took most of the day to rest and recover")
                 elif self.can_fight:
                     print("You can't rest on a day you got in a fight!")
@@ -76,7 +74,6 @@ class Game(GameBase):
                 print("See you 'round\n")
 
             case 4:
-                self.end_day_script.append(f"Day {self.n_days} ends")
                 self.newDay()
 
             case 5:
@@ -87,14 +84,22 @@ class Game(GameBase):
 
 
     def newDay(self):
-        self.player.playerHeal()
-        self.can_fight, self.can_rest = True, True
+        if self.n_days > 0:
+            self.day_events_list.append(f"^^ Day {self.n_days} summary ^^")
+            self.player.playerHeal()
+            self.can_fight, self.can_rest = True, True
 
-        # prints all statements that were added to self.end_day_script throughout the day
-        print(LINE_BREAK)
-        print('\n'.join(self.end_day_script))
-        print(LINE_BREAK)
-        
+            # prints all statements that were added to self.end_day_script throughout the day
+            print(LINE_BREAK)
+            print('\n'.join(self.day_events_list))
         self.n_days += 1
-        self.end_day_script.clear()
-        self.end_day_script.append(f"Day {self.n_days} begins")
+        print(LINE_BREAK)
+        print(f"Day {self.n_days} begins")
+
+        self.day_events_list.clear()
+        if self.n_days > 1:
+            self.player.assess_health()
+        else:
+            self.player.say(self.player.catch_phrase)
+
+        print(LINE_BREAK)
