@@ -1,5 +1,6 @@
 from fightable import Fightable
 from gameBase import *
+from items.itemOwner import ItemOwner
 
 
 
@@ -11,18 +12,17 @@ BASE_STATS = {
 
 
 
-class Player(Fightable):
+class Player(Fightable, ItemOwner):
 
     name: str
     n_wins: int = 0
     n_gold_earned: int = 0
     stats: dict = {}
     catch_phrase: str = "Shit... out of money again"
-    items: list = []
-
 
     def __init__(self, name: str, adjustment_stats: dict):
-        super().__init__(
+        Fightable.__init__(
+            self,
             max_health    = 10,
             health        = 10,
             attack        = 2,
@@ -30,6 +30,8 @@ class Player(Fightable):
             natural_armor = 1,
             dodge         = 0
         )
+        ItemOwner.__init__(self)
+
         self.name = name
         self.addStats(adjustment_stats, BASE_STATS)
         #print(f"BASE STATS: {BASE_STATS}\nADJUSTMENT STATS: {adjustment_stats}")
@@ -65,26 +67,33 @@ class Player(Fightable):
 
     
     def say(self, text: str):
-        c = cstr(f"\"{text}\"", colors.BLUE)
+        c = cstr(f"\"{text}\"", color.BLUE)
         print(f"{self.name}: {c}")
 
 
+    @ItemOwner.item_callback
     def take_damage(self, amount):
         amount = super().take_damage(amount)
         
         if amount > 4:
             self.say("I'm... about to pass out.")
-            cprint("You can't take another hit like that", colors.RED)
+            cprint("You can't take another hit like that", color.RED)
         elif amount > 1:
-            cprint("Took a nasty wound. That hurt like hell", colors.RED)
+            cprint("Took a nasty wound. That hurt like hell", color.RED)
         elif amount == 1:
-            cprint("Took a minor wound", colors.RED)
+            cprint("Took a minor wound", color.RED)
         else:
-            cprint("They couldn't manage to wound you", colors.RED)
+            cprint("They couldn't manage to wound you", color.RED)
 
         return amount
 
 
+    @ItemOwner.item_callback
+    def strike(self, opponent):
+        return super().strike(opponent)
+    
+
+    @ItemOwner.item_callback
     def assess_health(self):
         if self.health == self.max_health:
             self.say("Feeling in tip-top shape")

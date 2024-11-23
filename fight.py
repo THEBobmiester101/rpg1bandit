@@ -27,7 +27,7 @@ class Fight:
         print()
         enemies = [Enemy() for _ in range(n_enemies)]
         for i, enemy in enumerate(enemies):
-            print(f"Enemy {cstr(f'({i+1})', colors.GRAY)} is {enemy.assessment}")
+            print(f"Enemy {cstr(f'({i+1})', color.GRAY)} is {enemy.assessment}")
         print("Which enemy would you like to face?")
         i = GameBase.get_number_input(1, n_enemies)
         self.enemy = enemies[i - 1]
@@ -41,9 +41,9 @@ class Fight:
             self.player.n_wins += 1
             self.player.n_gold_earned += self.enemy.gold
             self.player.stats["gold"] += self.enemy.gold
-            print(f"You recovered {cstr(self.enemy.gold, colors.YELLOW)} gold")
+            print(f"You recovered {cstr(self.enemy.gold, color.YELLOW)} gold")
             self.game.day_events_list.append(
-                f"Won a fight and got {cstr(self.enemy.gold, colors.YELLOW)} gold")
+                f"Won a fight and got {cstr(self.enemy.gold, color.YELLOW)} gold")
 
         # death
         elif self.player.health == 0:

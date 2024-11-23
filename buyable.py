@@ -1,72 +1,68 @@
-from typing import Callable
 from abc import ABC
 from random import randint
 from gameBase import *
+from items.item import Item
 
-
-
-def unimplemented(real_parameter, im_with_real):
-    print("Item not implemented yet")
-    
-
-
-def gamble(player, bet_amount):
-    gold_won = randint(0, 2) * (bet_amount - 1)
-    player.stats["gold"] += gold_won
-    player.n_gold_earned += gold_won - bet_amount
-    print(f"Got back {gold_won} gold")
-    
-
-def basicCombatTraining(player, _):
-    player.dodge += 1
-    player.crit += 1
-    
-
-def weaponSmith(player, _):
-    player.attack += 1
-    
-
-def armorSmith(player, _):
-    player.natural_armor += 1
-    
-
-def magicRingFleet(player, _):
-    player.dodge += 1
-    
-
-def magicRingVicious(player, _):
-    player.attack += 1
-    player.crit += 1
-    
-
-def magicGreatSword(player, _):
-    player.attack += 2
-    print(f"\"Feed me... {cstr('blood...', colors.RED)}\"")
-    print("You feel compelled to feed the greatsword blood")
 
 
 class Buyable(ABC):
 
     name: str
-    cost: int
-    immediate: Callable
+    price: int
 
-    def __init__(self, name: str, cost: int, immediate = unimplemented):
-        self.name = name
-        self.cost = cost
-        self.immediate = immediate
+    def on_bought(self, player):
+        pass
+
+
+
+class BuyableItem(Buyable):
+    
+    item: Item
+
+    def __init__(self, item: Item, price: int):
+        self.item = item
+        self.name = item.name
+        self.price = price
+
+    def on_bought(self, player):
+        player.add_item(self.item)
 
 
 
 class Service(Buyable):
-    pass
+
+    def __init__(self, name: str, price: int):
+        self.name = name
+        self.price = price
         
 
 
-class Item(Buyable):
+class Gamble(Service):
 
-    per_round: Callable
+    def on_bought(self, player):
+        gold_won = randint(0, 2) * (self.price - 1)
+        player.stats["gold"] += gold_won
+        player.n_gold_earned += gold_won - self.price
+        print(f"Got back {gold_won} gold")
+    
 
-    def __init__(self, name: str, cost: int, immediate = unimplemented, per_round = unimplemented):
-        super(Item, self).__init__(name, cost, immediate)
-        self.per_round = per_round
+
+class CombatTraining(Service):
+
+    def on_bought(self, player):
+        player.dodge += 1
+        player.crit += 1
+
+
+
+class WeaponSmith(Service):
+
+    def on_bought(self, player):
+        player.attack += 1
+
+
+
+class ArmorSmith(Service):
+
+    def on_bought(self, player):
+        player.natural_armor += 1    

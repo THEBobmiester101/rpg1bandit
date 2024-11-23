@@ -2,30 +2,36 @@ from gameBase import *
 from player import Player
 from buyable import *
 
+from items.shield import Shield
+from items.ringOfTheFleetFox import RingOfTheFleetFox
+from items.viciousRing import ViciousRing
+from items.greatSword import GreatSword
+
 
 
 class Shop:
 
-    stock: dict = {}
+    stock: dict[Buyable, int] = {}
 
     
     def __init__(self):
         self.stock = {
-            Service("A hearty meal",                     3 ):                          100,
-            Service("Gamble",                            10,  gamble):                 -1,
-            Service("Basic combat training",             15,  basicCombatTraining):    2,
-            Service("Services of a skilled weaponsmith", 40,  weaponSmith):            2,
-            Service("Services of a skilled tanner",      50,  armorSmith):             2,
-            Item(   "Magic Shop: ring of the fleet fox", 65,  magicRingFleet):         1,
-            Item(   "Magic Shop: vicious ring",          80,  magicRingVicious):       1,
-            Item(   "Magic Shop: killer greatsword",     120, magicGreatSword):        1,
-            Service("Nothin' else",                      0 ):                          -.1
+            Service("A hearty meal",                             3): 100,
+            Gamble("Gamble",                                    10):  -1,
+            CombatTraining("Basic combat training",             15):   2,
+            WeaponSmith("Services of a skilled weaponsmith",    40):   2,
+            ArmorSmith("Services of a skilled tanner",          50):   2,
+            BuyableItem(Shield(),                               25):   3,
+            BuyableItem(RingOfTheFleetFox(),                    65):   1,
+            BuyableItem(ViciousRing(),                          80):   1,
+            BuyableItem(GreatSword(),                          120):   1,
+            Service("Nothin' else",                              0):  -1
         }
 
 
     def loop(self, game: GameBase, player: Player) -> bool:
         print("What would you like to buy?", 
-              f"(You have {cstr(player.stats['gold'], colors.YELLOW)} gold)\n")
+              f"(You have {cstr(player.stats['gold'], color.YELLOW)} gold)\n")
         
         buyable = self.__select()
         if buyable.name == "Nothin' else":
@@ -42,10 +48,10 @@ class Shop:
             if quantity == 0:
                 continue
             s = f"{buyable.name: <40} "
-            if buyable.cost != 0:
-                s += f"{cstr(buyable.cost, colors.YELLOW): >20} gold "
+            if buyable.price != 0:
+                s += f"{cstr(buyable.price, color.YELLOW): >20} gold "
             if quantity > 0:
-                s += f"{cstr(quantity, colors.MAGENTA): >20} pcs "
+                s += f"{cstr(quantity, color.MAGENTA): >20} pcs "
             options.append(s)
             options_buyable.append(buyable)
 
@@ -53,14 +59,11 @@ class Shop:
     
 
     def __sell(self, game: GameBase, player: Player, buyable: Buyable):
-        if player.has_gold(buyable.cost):
+        if player.has_gold(buyable.price):
             self.stock[buyable] -= 1 if self.stock[buyable] > 0 else 0
-            player.stats["gold"] -= buyable.cost
-            if buyable is Item:
-                player.items.append(buyable)
-            buyable.immediate(player, buyable.cost)
+            player.stats["gold"] -= buyable.price
             print(f"Purchased: {buyable.name}")
+            buyable.on_bought(player)
             game.day_events_list.append(f"Bought: {buyable.name}")
-            
         else:
             print(f"Sorry pal, you ain't got the cash")

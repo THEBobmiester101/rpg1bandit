@@ -84,16 +84,16 @@ class Enemy(Fightable):
         amount = super().take_damage(amount)
 
         if amount > round(self.max_health / 1.9):
-            cprint("Dealt massive damage", colors.GREEN)
+            cprint("Dealt massive damage", color.GREEN)
         elif self.dead():
-            cprint("A felling strike", colors.GREEN)
+            cprint("A felling strike", color.GREEN)
         elif amount > 4:
-            cprint("Strong attack", colors.GREEN)
+            cprint("Strong attack", color.GREEN)
         elif amount > 1:
-            cprint("Dealt some damage", colors.GREEN)
+            cprint("Dealt some damage", color.GREEN)
         elif amount == 1:
-            cprint("Barely hurt them...", colors.GREEN)
+            cprint("Barely hurt them...", color.GREEN)
         else:
-            cprint("Dealt no damage", colors.GREEN)
+            cprint("Dealt no damage", color.GREEN)
 
         return amount
