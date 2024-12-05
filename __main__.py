@@ -1,13 +1,4 @@
-"""
-Ideas:
-    > Add begging for money
-"""
-"""
-IMPORTS GO HERE
-"""
 from game import Game
-from shop import Shop
-
 
 
 if __name__ == '__main__':
