@@ -6,6 +6,7 @@ from items.shield import Shield
 from items.ringOfTheFleetFox import RingOfTheFleetFox
 from items.viciousRing import ViciousRing
 from items.greatSword import GreatSword
+from items.heartyMeal import HeartyMeal
 
 
 
@@ -16,7 +17,7 @@ class Shop:
     
     def __init__(self):
         self.stock = {
-            Service("A hearty meal",                             3): 100,
+            BuyableItem(HeartyMeal(),                            3): 100,
             Gamble("Gamble",                                    10):  -1,
             CombatTraining("Basic combat training",             15):   2,
             WeaponSmith("Services of a skilled weaponsmith",    40):   2,
@@ -31,7 +32,7 @@ class Shop:
 
     def loop(self, game: GameBase, player: Player) -> bool:
         print("What would you like to buy?", 
-              f"(You have {cstr(player.stats['gold'], color.YELLOW)} gold)\n")
+              f"(You have {cstr(player.gold, color.YELLOW)} gold)\n")
         
         buyable = self.__select()
         if buyable.name == "Nothin' else":
@@ -61,7 +62,7 @@ class Shop:
     def __sell(self, game: GameBase, player: Player, buyable: Buyable):
         if player.has_gold(buyable.price):
             self.stock[buyable] -= 1 if self.stock[buyable] > 0 else 0
-            player.stats["gold"] -= buyable.price
+            player.gold -= buyable.price
             print(f"Purchased: {buyable.name}")
             buyable.on_bought(player)
             game.day_events_list.append(f"Bought: {buyable.name}")

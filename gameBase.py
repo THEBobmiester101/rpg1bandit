@@ -30,6 +30,10 @@ def cprint(text: str, col: color):
     print(cstr(text, col))
 
 
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
 
 class GameBase(ABC):
 
@@ -44,7 +48,7 @@ class GameBase(ABC):
                 n = int(input(cstr(f"(Enter {i_from}-{i_to}) > ", color.GRAY)))
             except:
                 pass
-        os.system('cls')
+        clear()
         return n
 
 

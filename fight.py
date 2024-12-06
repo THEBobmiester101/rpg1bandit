@@ -40,7 +40,7 @@ class Fight:
         if self.enemy.health == 0:
             self.player.n_wins += 1
             self.player.n_gold_earned += self.enemy.gold
-            self.player.stats["gold"] += self.enemy.gold
+            self.player.gold += self.enemy.gold
             print(f"You recovered {cstr(self.enemy.gold, color.YELLOW)} gold")
             self.game.day_events_list.append(
                 f"Won a fight and got {cstr(self.enemy.gold, color.YELLOW)} gold")

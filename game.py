@@ -1,9 +1,8 @@
-from gameBase import GameBase
+from gameBase import *
 from player import Player
-from enemy import Enemy
 from shop import Shop
 from fight import Fight
-import random
+import os
 
 
 
@@ -30,15 +29,15 @@ class Game(GameBase):
 
     def __init__(self, console_line_height):
         player_name = input("Choose a name for your character: ")
-        self.player = Player(player_name, {})
+        self.player = Player(player_name)
         self.shop = Shop()
 
-        for _ in range(console_line_height):
-            print()
-        self.newDay()
+        clear()
+        self.__new_day()
 
     
     def __del__(self):
+        self.__end_day()
         print(self.player.name + "\'s journey ends.")
         print(f"Reached day {self.n_days}, killed {self.player.n_wins}, earned {self.player.n_gold_earned} gold")
 
@@ -74,7 +73,8 @@ class Game(GameBase):
                 print("See you 'round\n")
 
             case 4:
-                self.newDay()
+                self.__end_day()
+                self.__new_day()
 
             case 5:
                 return False
@@ -83,23 +83,27 @@ class Game(GameBase):
         return True
 
 
-    def newDay(self):
-        if self.n_days > 0:
-            self.day_events_list.append(f"^^ Day {self.n_days} summary ^^")
-            self.player.playerHeal()
-            self.can_fight, self.can_rest = True, True
-
-            # prints all statements that were added to self.end_day_script throughout the day
-            print(LINE_BREAK)
-            print('\n'.join(self.day_events_list))
+    def __new_day(self):
         self.n_days += 1
+
         print(LINE_BREAK)
         print(f"Day {self.n_days} begins")
-
-        self.day_events_list.clear()
         if self.n_days > 1:
             self.player.assess_health()
         else:
             self.player.say(self.player.catch_phrase)
+            #self.player.say_slow(self.player.catch_phrase)
+        print(LINE_BREAK)
+
+
+    def __end_day(self):
+        self.player.end_day()
+        self.can_fight, self.can_rest = True, True
 
         print(LINE_BREAK)
+        print(f"Day {self.n_days} ends")
+        if len(self.day_events_list) > 0:
+            print("Summary:")
+            print("- " + "\n- ".join(self.day_events_list))
+
+        self.day_events_list.clear()
