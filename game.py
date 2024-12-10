@@ -57,7 +57,7 @@ class Game(GameBase):
 
             case 2:
                 if self.can_rest:
-                    self.player.playerHeal()
+                    self.player.heal(self.player.max_health / 2)
                     self.can_fight, self.can_rest = False, False
                     self.day_events_list.append("Rested for most of the day")
                     print("Took most of the day to rest and recover")
