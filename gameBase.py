@@ -55,6 +55,7 @@ class GameBase(ABC):
     @staticmethod
     def get_input_option(options: list) -> int:
         for i, opt in enumerate(options):
-            print(cstr(f"({i+1})", color.GRAY), opt)
+            num = cstr(f"({i+1})", color.GRAY)
+            print(f"{num: <14}", opt)
 
         return GameBase.get_number_input(1, options.__len__())

@@ -1,6 +1,6 @@
 from .item import Item
 from .greatSword import GreatSword
-
+from inspect import signature
 
 
 class ItemOwner:
@@ -10,7 +10,7 @@ class ItemOwner:
 
     @staticmethod
     def item_callback(func):
-        
+
         def item_wrapped_func(self, *args):
             relevant_items = [i for i in self.items if func.__name__ in i.callbacks]
 
@@ -18,9 +18,8 @@ class ItemOwner:
                 args = (it.callbacks[func.__name__](self, *args),)
                 if it.used_up:
                     self.remove_item(it)
-            
-            ret = func(self, *args)
-            
+
+            ret = func(self, *args) if len(signature(func).parameters) > 1 else func(self)
             return ret
         
         return item_wrapped_func

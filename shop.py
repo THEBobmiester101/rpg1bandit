@@ -29,7 +29,7 @@ class Shop:
             BuyableItem(ViciousRing(),                          80):   1,
             BuyableItem(GreatSword(),                          120):   1,
             BuyableItem(MoonRock(),                             10):   4,
-            BuyableItem(PotionToughness,                         8):   5,
+            BuyableItem(PotionToughness(),                       8):   5,
             Service("Nothin' else",                              0):  -1
         }
 
@@ -49,7 +49,7 @@ class Shop:
     def __select(self) -> Buyable:
         options = []
         options_buyable = []
-        for i, (buyable, quantity) in enumerate(self.stock.items()):
+        for _, (buyable, quantity) in enumerate(self.stock.items()):
             if quantity == 0:
                 continue
             s = f"{buyable.name: <40} "
