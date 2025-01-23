@@ -8,6 +8,7 @@ from items.viciousRing import ViciousRing
 from items.greatSword import GreatSword
 from items.moonRock import MoonRock
 from items.heartyMeal import HeartyMeal
+from items.potionToughness import PotionToughness
 
 
 
@@ -28,6 +29,7 @@ class Shop:
             BuyableItem(ViciousRing(),                          80):   1,
             BuyableItem(GreatSword(),                          120):   1,
             BuyableItem(MoonRock(),                             10):   4,
+            BuyableItem(PotionToughness,                         8):   5,
             Service("Nothin' else",                              0):  -1
         }
 
