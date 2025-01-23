@@ -6,6 +6,7 @@ from items.shield import Shield
 from items.ringOfTheFleetFox import RingOfTheFleetFox
 from items.viciousRing import ViciousRing
 from items.greatSword import GreatSword
+from items.moonRock import MoonRock
 from items.heartyMeal import HeartyMeal
 
 
@@ -26,6 +27,7 @@ class Shop:
             BuyableItem(RingOfTheFleetFox(),                    65):   1,
             BuyableItem(ViciousRing(),                          80):   1,
             BuyableItem(GreatSword(),                          120):   1,
+            BuyableItem(MoonRock(),                             10):   4,
             Service("Nothin' else",                              0):  -1
         }
 
