@@ -19,6 +19,7 @@ class Shop:
     
     def __init__(self):
         self.stock = {
+	    Service("Nothin' else", 				 0):  -1,
             BuyableItem(HeartyMeal(),                            3): 100,
             Gamble("Gamble",                                    10):  -1,
             CombatTraining("Basic combat training",             15):   2,
@@ -29,8 +30,7 @@ class Shop:
             BuyableItem(ViciousRing(),                          80):   1,
             BuyableItem(GreatSword(),                          120):   1,
             BuyableItem(MoonRock(),                             10):   4,
-            BuyableItem(PotionToughness(),                       8):   5,
-            Service("Nothin' else",                              0):  -1
+            BuyableItem(PotionToughness(),                       8):   5
         }
 
 

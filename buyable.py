@@ -41,7 +41,7 @@ class Gamble(Service):
 
     def on_bought(self, player):
         gold_won = randint(0, 2) * (self.price - 1)
-        player.stats["gold"] += gold_won
+        player.gold += gold_won
         player.n_gold_earned += gold_won - self.price
         print(f"Got back {gold_won} gold")
     
